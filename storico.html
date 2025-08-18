@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>📚 Storico</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<meta name="robots" content="noindex">
+<script>document.documentElement.classList.add('auth-checking');</script>
+</head>
+<body>
+  <div class="container mt-4">
+    <h1 class="text-center">📚 Storico</h1>
+
+    <div class="row g-2 mt-2 align-items-end">
+      <div class="col-12 col-sm-4">
+        <label class="form-label">Mese</label>
+        <input id="mese" type="month" class="form-control">
+      </div>
+      <div class="col-12 col-sm-5">
+        <label class="form-label">Cerca (descrizione/etichetta)</label>
+        <input id="search" type="text" class="form-control" placeholder="pizza, abbonamento, ...">
+      </div>
+      <div class="col-12 col-sm-3">
+        <button id="btnFiltra" class="btn btn-primary w-100">Applica</button>
+      </div>
+    </div>
+
+    <div class="mt-3">
+      <span class="badge text-bg-secondary">Totale mese: <span id="totale">€0,00</span></span>
+    </div>
+
+    <div class="table-responsive mt-3">
+      <table class="table table-sm align-middle">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Descrizione</th>
+            <th>Categoria</th>
+            <th class="text-end">Importo</th>
+            <th>Etichette</th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+          <tr><td colspan="5" class="text-center text-muted">Caricamento…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <nav class="navbar navbar-dark bg-dark fixed-bottom">
+    <div class="container-fluid d-flex justify-content-around">
+      <a class="nav-link text-white" href="index.html">Riepilogo</a>
+      <a class="nav-link text-white" href="inserisci.html">➕ Inserisci</a>
+      <a class="nav-link text-white" href="storico.html">Storico</a>
+    </div>
+  </nav>
+
+  <script type="module">
+    import { requireAuth } from "./js/auth.js";
+    import { getUltimeSpese, filtraPerMese, euro } from "./js/spese.js";
+    requireAuth();
+
+    const tbody  = document.getElementById("tbody");
+    const inputM = document.getElementById("mese");
+    const inputQ = document.getElementById("search");
+    const totale = document.getElementById("totale");
+
+    // default: mese corrente
+    const now = new Date();
+    const ym  = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
+    inputM.value = ym;
+
+    let cache = [];
+    await carica();
+
+    document.getElementById("btnFiltra").addEventListener("click", render);
+
+    async function carica() {
+      try {
+        cache = await getUltimeSpese(300); // carica ultime 300
+        render();
+      } catch (e) {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-danger text-center">${e.message}</td></tr>`;
+      }
+    }
+
+    function render() {
+      const mese = inputM.value; // "YYYY-MM"
+      const q = (inputQ.value || "").toLowerCase().trim();
+
+      let data = filtraPerMese(cache, mese);
+      if (q) {
+        data = data.filter(s =>
+          (s.descrizione || "").toLowerCase().includes(q) ||
+          (Array.isArray(s.etichette) ? s.etichette.join(",") : "").toLowerCase().includes(q)
+        );
+      }
+
+      // Totale
+      const tot = data.reduce((sum, s) => sum + Number(s.importo || 0), 0);
+      totale.textContent = euro(tot);
+
+      // Tabella
+      if (!data.length) {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Nessuna spesa per il mese selezionato.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = data.map(s => `
+        <tr>
+          <td>${s.data}</td>
+          <td>${escapeHtml(s.descrizione || "")}</td>
+          <td>${escapeHtml(s.categoria || "")}</td>
+          <td class="text-end">${euro(s.importo)}</td>
+          <td>${Array.isArray(s.etichette) ? s.etichette.map(t => `<span class="badge text-bg-light me-1">${escapeHtml(t)}</span>`).join("") : ""}</td>
+        </tr>
+      `).join("");
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, m =>
+        ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]
+      );
+    }
+  </script>
+</body>
+</html>
