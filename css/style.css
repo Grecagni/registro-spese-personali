@@ -1,2 +1,5 @@
+/* spazio per la navbar fissa */
 body { padding-bottom: 62px; }
-html.auth-checking { opacity: 0; pointer-events: none; }
+
+/* nasconde SOLO l'area protetta finché non è pronto l'auth */
+.guard-hidden { opacity: 0; pointer-events: none; }

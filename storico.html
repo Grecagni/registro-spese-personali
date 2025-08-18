@@ -5,21 +5,23 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>📚 Storico</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
 <link rel="stylesheet" href="css/style.css">
 <meta name="robots" content="noindex">
-<script>document.documentElement.classList.add('auth-checking');</script>
 </head>
 <body>
-  <div class="container mt-4">
-    <h1 class="text-center">📚 Storico</h1>
+  <h1 class="text-center mt-4">📚 Storico</h1>
 
-    <div class="row g-2 mt-2 align-items-end">
+  <div class="container mt-2" data-guard>
+    <div class="row g-2 align-items-end">
       <div class="col-12 col-sm-4">
-        <label class="form-label">Mese</label>
+        <label class="form-label" for="mese">Mese</label>
         <input id="mese" type="month" class="form-control">
       </div>
       <div class="col-12 col-sm-5">
-        <label class="form-label">Cerca (descrizione/etichetta)</label>
+        <label class="form-label" for="search">Cerca (descrizione/etichetta)</label>
         <input id="search" type="text" class="form-control" placeholder="pizza, abbonamento, ...">
       </div>
       <div class="col-12 col-sm-3">
@@ -49,29 +51,36 @@
     </div>
   </div>
 
-<nav class="navbar navbar-dark bg-dark fixed-bottom">
-  <div class="container-fluid d-flex justify-content-around">
-    <a class="nav-link text-white" data-page="index.html" href="index.html">Riepilogo</a>
-    <a class="nav-link text-white" data-page="inserisci.html" href="inserisci.html">➕ Inserisci</a>
-    <a class="nav-link text-white" data-page="storico.html" href="storico.html">Storico</a>
-    <a class="nav-link text-white" href="#" id="logoutLink">Esci</a>
-  </div>
-</nav>
+  <!-- Navbar comune -->
+  <nav class="navbar navbar-dark bg-dark fixed-bottom">
+    <div class="container-fluid d-flex justify-content-around">
+      <a class="nav-link text-white" data-page="index.html" href="index.html">Riepilogo</a>
+      <a class="nav-link text-white" data-page="inserisci.html" href="inserisci.html">➕ Inserisci</a>
+      <a class="nav-link text-white" data-page="storico.html" href="storico.html">Storico</a>
+      <a class="nav-link text-white" href="#" id="logoutLink">Esci</a>
+    </div>
+  </nav>
 
   <script type="module">
-    import { requireAuth } from "./js/auth.js";
+    import { requireAuth, logout } from "./js/auth.js";
     import { getUltimeSpese, filtraPerMese, euro } from "./js/spese.js";
     requireAuth();
+
+    // navbar attiva + logout
+    const file = (location.pathname.split("/").pop() || "index.html").toLowerCase();
+    document.querySelectorAll('nav a[data-page]').forEach(a=>{
+      if (a.getAttribute('data-page') === file) a.classList.add('fw-bold','text-decoration-underline');
+    });
+    document.getElementById("logoutLink")?.addEventListener("click",(e)=>{ e.preventDefault(); logout(); });
 
     const tbody  = document.getElementById("tbody");
     const inputM = document.getElementById("mese");
     const inputQ = document.getElementById("search");
     const totale = document.getElementById("totale");
 
-    // default: mese corrente
+    // default mese corrente
     const now = new Date();
-    const ym  = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
-    inputM.value = ym;
+    inputM.value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
 
     let cache = [];
     await carica();
@@ -80,7 +89,7 @@
 
     async function carica() {
       try {
-        cache = await getUltimeSpese(300); // carica ultime 300
+        cache = await getUltimeSpese(300);
         render();
       } catch (e) {
         tbody.innerHTML = `<tr><td colspan="5" class="text-danger text-center">${e.message}</td></tr>`;
@@ -99,11 +108,11 @@
         );
       }
 
-      // Totale
+      // totale
       const tot = data.reduce((sum, s) => sum + Number(s.importo || 0), 0);
       totale.textContent = euro(tot);
 
-      // Tabella
+      // tabella
       if (!data.length) {
         tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Nessuna spesa per il mese selezionato.</td></tr>`;
         return;
