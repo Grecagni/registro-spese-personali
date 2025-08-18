@@ -1,19 +1,29 @@
-<!DOCTYPE html><html lang="it"><head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Riepilogo</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-</head><body>
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Riepilogo</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<meta name="robots" content="noindex">
+<script>
+  // evita flash contenuti prima del check
+  document.documentElement.classList.add('auth-checking');
+</script>
+</head>
+<body>
   <div class="container mt-3">
     <h1 class="text-center">📊 Riepilogo</h1>
     <p id="who" class="text-center text-muted">Caricamento utente…</p>
+    <div class="mt-4 text-center">Contenuti protetti…</div>
   </div>
 
   <nav class="navbar navbar-dark bg-dark fixed-bottom">
     <div class="container-fluid d-flex justify-content-around">
       <a class="nav-link text-white" href="index.html">Riepilogo</a>
-      <a class="nav-link text-white" href="#">➕ Inserisci</a>
-      <a class="nav-link text-white" href="#">Storico</a>
+      <a class="nav-link text-white" href="inserisci.html">➕ Inserisci</a>
+      <a class="nav-link text-white" href="storico.html">Storico</a>
       <a class="nav-link text-white" href="#" id="logoutLink">Esci</a>
     </div>
   </nav>
@@ -22,6 +32,11 @@
     import { requireAuth, currentUser, logout } from "./auth.js";
     requireAuth();
     document.getElementById("logoutLink")?.addEventListener("click",(e)=>{ e.preventDefault(); logout(); });
-    const i=setInterval(()=>{ const u=currentUser(); if(u){ document.getElementById("who").textContent=`Connesso come ${u.email}`; clearInterval(i);} },200);
+    // mostra l'email quando disponibile
+    const i=setInterval(()=>{
+      const u=currentUser();
+      if(u){ document.getElementById("who").textContent = `Connesso come ${u.email}`; clearInterval(i); }
+    },200);
   </script>
-</body></html>
+</body>
+</html>
