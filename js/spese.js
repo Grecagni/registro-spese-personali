@@ -42,14 +42,16 @@ export async function addSpesa({ data, descrizione, importo, categoria, etichett
 }
 
 // lettura semplice: ultime N spese dell'utente, ordinate per data (stringa "YYYY-MM-DD")
+// js/spese.js
 export async function getUltimeSpese(max = 200) {
   const user = await waitUser();
   const uid = user.uid;
   const col = collection(db, "users", uid, "spese");
-  const q = query(col, where("userId", "==", uid), orderBy("data", "desc"), limit(max));
+  const q = query(col, orderBy("data", "desc"), limit(max));
   const snap = await getDocs(q);
   return snap.docs.map(d => ({ id: d.id, ...d.data() }));
 }
+
 
 // utilità client: filtra per mese AAAA-MM (su array già caricato)
 export function filtraPerMese(spese, yearMonth) {

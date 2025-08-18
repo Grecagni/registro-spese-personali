@@ -51,13 +51,14 @@
     </form>
   </div>
 
-  <nav class="navbar navbar-dark bg-dark fixed-bottom">
-    <div class="container-fluid d-flex justify-content-around">
-      <a class="nav-link text-white" href="index.html">Riepilogo</a>
-      <a class="nav-link text-white" href="inserisci.html">➕ Inserisci</a>
-      <a class="nav-link text-white" href="storico.html">Storico</a>
-    </div>
-  </nav>
+<nav class="navbar navbar-dark bg-dark fixed-bottom">
+  <div class="container-fluid d-flex justify-content-around">
+    <a class="nav-link text-white" data-page="index.html" href="index.html">Riepilogo</a>
+    <a class="nav-link text-white" data-page="inserisci.html" href="inserisci.html">➕ Inserisci</a>
+    <a class="nav-link text-white" data-page="storico.html" href="storico.html">Storico</a>
+    <a class="nav-link text-white" href="#" id="logoutLink">Esci</a>
+  </div>
+</nav>
 
   <script type="module">
     import { requireAuth } from "./js/auth.js";
