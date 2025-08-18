@@ -21,33 +21,27 @@
       <input id="password" type="password" class="form-control" required autocomplete="current-password">
     </div>
     <button class="btn btn-primary w-100" type="submit">Entra</button>
-    <!-- Se abiliti Google:
-    <button id="googleBtn" class="btn btn-outline-secondary w-100 mt-2" type="button">Accedi con Google</button> -->
   </form>
 
   <script type="module">
-    import { emailLogin, /*googleLogin,*/ bounceIfLogged } from "./auth.js";
-    // Se già autenticato, vai via da qui
+    import { emailLogin, bounceIfLogged } from "./auth.js";
+
+    // Se già loggato, rimbalza via da qui (rispetta ?from=)
     bounceIfLogged();
 
-    const f = document.getElementById("loginForm");
-    f.addEventListener("submit", async (e)=>{
+    const form = document.getElementById("loginForm");
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const email = document.getElementById("email").value.trim();
       const pass  = document.getElementById("password").value;
       try {
         await emailLogin(email, pass);
-        // bounceIfLogged farà il redirect (rispetta ?from=)
-        location.href = "index.html";
+        const back = new URL(location.href).searchParams.get("from");
+        location.href = back || "index.html";
       } catch (err) {
         alert(err.message);
       }
     });
-
-    // document.getElementById("googleBtn")?.addEventListener("click", async ()=>{
-    //   try { await googleLogin(); location.href = "index.html"; }
-    //   catch(err){ alert(err.message); }
-    // });
   </script>
 </body>
 </html>

@@ -1,70 +1,61 @@
-// auth.js
+// auth.js — solo email/password, guardia semplice
 import { auth } from "./db.js";
 import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
-  GoogleAuthProvider,
-  signInWithPopup
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
-// File corrente (index.html se path termina con /)
-function currentFile() {
-  const p = location.pathname.split("/").pop();
-  return (p === "" ? "index.html" : p).toLowerCase();
-}
+// Rileva il file corrente (su Pages "" => index.html)
+const currentFile = () => {
+  const last = location.pathname.split("/").pop();
+  return (last === "" ? "index.html" : last).toLowerCase();
+};
 
-// Elenco pagine protette
-const PROTECTED = new Set(["index.html","inserisci.html","storico.html"]);
+// Pagine protette (per ora solo index)
+const PROT = new Set(["index.html"]);
 
-// Nasconde la pagina finché non sappiamo se l'utente è loggato (evita flash)
-function startAuthMask()   { document.documentElement.classList.add("auth-checking"); }
-function stopAuthMask()    { document.documentElement.classList.remove("auth-checking"); }
+// Anti-flash: nasconde la pagina finché non decidiamo cosa fare
+const maskOn  = () => document.documentElement.classList.add("auth-checking");
+const maskOff = () => document.documentElement.classList.remove("auth-checking");
 
-// Da chiamare nelle pagine protette, il prima possibile
+// Da chiamare subito nelle pagine protette (index)
 export function requireAuth() {
-  startAuthMask();
+  maskOn();
   onAuthStateChanged(auth, (user) => {
-    const file = currentFile();
-    const mustBeLogged = PROTECTED.has(file);
-    if (mustBeLogged && !user) {
-      // redirect pulito, niente "back loop"
+    const must = PROT.has(currentFile());
+    if (must && !user) {
       const backTo = encodeURIComponent(location.pathname + location.search + location.hash);
+      // replace evita loop col tasto indietro
       location.replace(`login.html?from=${backTo}`);
       return;
     }
-    // OK: mostra la pagina
-    stopAuthMask();
+    maskOff(); // ok, mostra la pagina
   });
 }
 
-// Se sei già loggato, evita di vedere la pagina di login
+// Evita di mostrare login se già autenticato
 export function bounceIfLogged() {
-  startAuthMask();
+  maskOn();
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      const url = new URL(location.href);
-      const back = url.searchParams.get("from");
-      stopAuthMask();
-      location.replace(back ? back : "index.html");
+      const back = new URL(location.href).searchParams.get("from");
+      maskOff();
+      location.replace(back || "index.html");
     } else {
-      stopAuthMask();
+      maskOff();
     }
   });
 }
 
-// Helpers login/logout
+// Email/password
 export function emailLogin(email, password) {
   return signInWithEmailAndPassword(auth, email, password);
 }
-export async function googleLogin() {
-  const provider = new GoogleAuthProvider();
-  return signInWithPopup(auth, provider);
-}
+
 export async function logout() {
   await signOut(auth);
   location.replace("login.html");
 }
-export function currentUser() {
-  return auth.currentUser;
-}
+
+export const currentUser = () => auth.currentUser;

@@ -8,22 +8,20 @@
 <link rel="stylesheet" href="style.css">
 <meta name="robots" content="noindex">
 <script>
-  // evita flash contenuti prima del check
+  // Evita flash dei contenuti prima del check auth
   document.documentElement.classList.add('auth-checking');
 </script>
 </head>
 <body>
-  <div class="container mt-3">
+  <div class="container mt-4">
     <h1 class="text-center">📊 Riepilogo</h1>
     <p id="who" class="text-center text-muted">Caricamento utente…</p>
-    <div class="mt-4 text-center">Contenuti protetti…</div>
+    <div class="alert alert-success text-center mt-4">Autenticazione OK</div>
   </div>
 
   <nav class="navbar navbar-dark bg-dark fixed-bottom">
-    <div class="container-fluid d-flex justify-content-around">
-      <a class="nav-link text-white" href="index.html">Riepilogo</a>
-      <a class="nav-link text-white" href="inserisci.html">➕ Inserisci</a>
-      <a class="nav-link text-white" href="storico.html">Storico</a>
+    <div class="container-fluid d-flex justify-content-between">
+      <span class="navbar-text text-white">Registro spese personali</span>
       <a class="nav-link text-white" href="#" id="logoutLink">Esci</a>
     </div>
   </nav>
@@ -31,12 +29,19 @@
   <script type="module">
     import { requireAuth, currentUser, logout } from "./auth.js";
     requireAuth();
-    document.getElementById("logoutLink")?.addEventListener("click",(e)=>{ e.preventDefault(); logout(); });
-    // mostra l'email quando disponibile
-    const i=setInterval(()=>{
-      const u=currentUser();
-      if(u){ document.getElementById("who").textContent = `Connesso come ${u.email}`; clearInterval(i); }
-    },200);
+
+    document.getElementById("logoutLink")?.addEventListener("click",(e)=>{
+      e.preventDefault(); logout();
+    });
+
+    // Mostra l'email quando disponibile
+    const t = setInterval(()=>{
+      const u = currentUser();
+      if (u) {
+        document.getElementById("who").textContent = `Connesso come ${u.email}`;
+        clearInterval(t);
+      }
+    }, 200);
   </script>
 </body>
 </html>
