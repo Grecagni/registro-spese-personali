@@ -1,5 +1,0 @@
-/* spazio per la navbar fissa (se la userai) */
-body { padding-bottom: 62px; }
-
-/* maschera la pagina durante il controllo auth (niente flicker) */
-html.auth-checking { opacity: 0; pointer-events: none; }

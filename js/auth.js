@@ -1,4 +1,4 @@
-// js/auth.js — solo email/password, guardia semplice
+// js/auth.js
 import { auth } from "./db.js";
 import {
   onAuthStateChanged,
@@ -15,7 +15,7 @@ const currentFile = () => {
 // Pagine protette (per ora solo index)
 const PROT = new Set(["index.html"]);
 
-// Anti-flash: nasconde la pagina finché non decidiamo cosa fare
+// Anti-flash: maschera pagina durante il check
 const maskOn  = () => document.documentElement.classList.add("auth-checking");
 const maskOff = () => document.documentElement.classList.remove("auth-checking");
 
@@ -25,7 +25,7 @@ export function requireAuth() {
   onAuthStateChanged(auth, (user) => {
     if (PROT.has(currentFile()) && !user) {
       const backTo = encodeURIComponent(location.pathname + location.search + location.hash);
-      location.replace(`login.html?from=${backTo}`);
+      location.replace(`login.html?from=${backTo}`); // replace evita loop col tasto indietro
       return;
     }
     maskOff();

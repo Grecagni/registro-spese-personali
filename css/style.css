@@ -1,0 +1,2 @@
+body { padding-bottom: 62px; }
+html.auth-checking { opacity: 0; pointer-events: none; }
