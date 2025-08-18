@@ -27,11 +27,12 @@
   </nav>
 
   <script type="module">
-    import { requireAuth, currentUser, logout } from "./auth.js";
+    import { requireAuth, currentUser, logout } from "./js/auth.js";
     requireAuth();
 
     document.getElementById("logoutLink")?.addEventListener("click",(e)=>{
-      e.preventDefault(); logout();
+      e.preventDefault();
+      logout();
     });
 
     // Mostra l'email quando disponibile
