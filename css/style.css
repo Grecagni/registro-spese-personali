@@ -4,7 +4,7 @@ body { padding-bottom: 62px; }
 /* nasconde SOLO l'area protetta finché non è pronto l'auth */
 .guard-hidden { opacity: 0; pointer-events: none; }
 
-/* ====== LOGIN (stile minimale) ====== */
+/* ====== LOGIN (stile minimale) ====== 
 .page-login { background: #f8f9fa; }
 @media (prefers-color-scheme: dark) {
   .page-login { background: #0b0f14; }
@@ -12,3 +12,5 @@ body { padding-bottom: 62px; }
 .login-card { max-width: 420px; border-radius: 12px; }
 .login-form { max-width: 360px; }
 .form-label { font-weight: 500; }
+
+*/
