@@ -1,9 +1,9 @@
-// db.js
+// js/db.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import { getAuth }        from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import { getFirestore }   from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-// firebaseConfig
+// Config (quella già usata nel tuo progetto)
 const firebaseConfig = {
   apiKey: "AIzaSyB76HrqxMp0EuPsedVMBJaz6MW5qHdFr10",
   authDomain: "gestione-spese-personale.firebaseapp.com",

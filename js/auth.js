@@ -1,4 +1,4 @@
-// js/auth.js — guardia + login/logout (solo email)
+// js/auth.js — guardie + login/logout (solo email)
 import { auth } from "./db.js";
 import {
   onAuthStateChanged,
@@ -6,55 +6,49 @@ import {
   signOut,
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
-// file corrente (su Pages "" => index.html)
+const PROTECTED = new Set(["index.html","inserisci.html","storico.html"]);
+
 const currentFile = () => {
-  const last = location.pathname.split("/").pop();
-  return (last === "" ? "index.html" : last).toLowerCase();
+  const last = (location.pathname.split("/").pop() || "index.html").toLowerCase();
+  return last === "" ? "index.html" : last;
 };
 
-// pagine protette
-const PROT = new Set(["index.html","inserisci.html","storico.html"]);
+const redirect = (url) => location.replace(url);
 
-// maschera solo l'area protetta (elemento con [data-guard]), fallback <html>
-const guardEl = () => document.querySelector("[data-guard]") || document.documentElement;
-const startMask = () => guardEl().classList.add("guard-hidden");
-const stopMask  = () => guardEl().classList.remove("guard-hidden");
-
-// da chiamare SUBITO nelle pagine protette
-export function requireAuth() {
-  startMask();
-  onAuthStateChanged(auth, (user) => {
-    if (PROT.has(currentFile()) && !user) {
-      const backTo = encodeURIComponent(location.pathname + location.search + location.hash);
-      location.replace(`login.html?from=${backTo}`);
-      return;
-    }
-    stopMask();
-  });
-}
-
-// evita di mostrare login se già autenticato
+// Se sei già loggato, non ha senso stare su login
 export function bounceIfLogged() {
-  startMask();
   onAuthStateChanged(auth, (user) => {
-    if (user) {
+    if (user && currentFile() === "login.html") {
       const back = new URL(location.href).searchParams.get("from");
-      stopMask();
-      location.replace(back || "index.html");
-    } else {
-      stopMask();
+      redirect(back || "index.html");
     }
   });
 }
 
-// email/password
+// Impone autenticazione sulle pagine protette
+export function requireAuth() {
+  if (!PROTECTED.has(currentFile())) return; // pagina non protetta
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      const from = encodeURIComponent(currentFile());
+      redirect(`login.html?from=${from}`);
+    } else {
+      // se usi .guard-hidden per evitare flash
+      document.querySelectorAll(".guard-hidden").forEach(el => el.classList.remove("guard-hidden"));
+    }
+  });
+}
+
+// Login email/password
 export function emailLogin(email, password) {
   return signInWithEmailAndPassword(auth, email, password);
 }
 
+// Logout
 export async function logout() {
   await signOut(auth);
-  location.replace("login.html");
+  redirect("login.html");
 }
 
+// User corrente
 export const currentUser = () => auth.currentUser;

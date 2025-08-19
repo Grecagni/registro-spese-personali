@@ -1,10 +1,10 @@
 // js/spese.js
 import { auth, db } from "./db.js";
 import {
-  addDoc, collection, getDocs, orderBy, query, where, limit
+  addDoc, collection, getDocs, orderBy, query, limit
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-// attende che l'utente sia pronto
+// attende utente pronto (max ~8s)
 function waitUser() {
   return new Promise((resolve, reject) => {
     const t0 = performance.now();
@@ -16,49 +16,44 @@ function waitUser() {
   });
 }
 
-export async function addSpesa({ data, descrizione, importo, categoria, etichette }) {
-  const user = await waitUser();
-  const uid = user.uid;
-
-  const amount = Number(parseFloat(importo).toFixed(2));
-  const tags = (etichette || "")
-    .split(",")
-    .map(t => t.trim().toLowerCase())
-    .filter(Boolean);
+// Aggiunge una spesa nello schema /users/{uid}/spese
+export async function addSpesa(payload) {
+  const u = auth.currentUser || await waitUser();
+  const etichette = Array.isArray(payload.etichette)
+    ? payload.etichette
+    : (typeof payload.etichette === "string"
+        ? payload.etichette.split(",").map(s => s.trim()).filter(Boolean)
+        : []);
 
   const doc = {
-    userId: uid,
-    data,                // "YYYY-MM-DD"
-    descrizione,
-    importo: amount,     // numero
-    categoria,
-    etichette: tags,
+    userId: u.uid,
+    data: payload.data,                         // "YYYY-MM-DD"
+    descrizione: payload.descrizione,
+    importo: Number(payload.importo),
+    categoria: payload.categoria || "Altro",
+    etichette,
     createdAt: new Date().toISOString()
   };
 
-  const col = collection(db, "users", uid, "spese");
-  const ref = await addDoc(col, doc);
-  return ref.id;
+  const col = collection(db, "users", u.uid, "spese");
+  await addDoc(col, doc);
 }
 
-// lettura semplice: ultime N spese dell'utente, ordinate per data (stringa "YYYY-MM-DD")
-// js/spese.js
+// Ultime spese ordinate per data (stringa "YYYY-MM-DD")
 export async function getUltimeSpese(max = 200) {
-  const user = await waitUser();
-  const uid = user.uid;
-  const col = collection(db, "users", uid, "spese");
-  const q = query(col, orderBy("data", "desc"), limit(max));
-  const snap = await getDocs(q);
+  const u = auth.currentUser || await waitUser();
+  const col = collection(db, "users", u.uid, "spese");
+  const qy  = query(col, orderBy("data", "desc"), limit(max));
+  const snap = await getDocs(qy);
   return snap.docs.map(d => ({ id: d.id, ...d.data() }));
 }
 
-
-// utilità client: filtra per mese AAAA-MM (su array già caricato)
+// Filtra array già caricato per mese AAAA-MM
 export function filtraPerMese(spese, yearMonth) {
-  return spese.filter(s => s.data && s.data.startsWith(yearMonth)); // "2025-08"
+  return spese.filter(s => s.data && s.data.startsWith(yearMonth));
 }
 
-// format valuta base
+// Format valuta base
 export function euro(n) {
   const v = Number(n || 0);
   return v.toLocaleString("it-IT", { style: "currency", currency: "EUR" });
