@@ -89,13 +89,13 @@ export async function addSerieRicorrente(serieInput) {
     weekday: serieInput.weekday || null,    // 1=lun ... 7=dom
     monthlyMode: serieInput.monthlyMode || null, // giorno_fisso | ultimo_giorno
     anchorDay: serieInput.anchorDay ? Number(serieInput.anchorDay) : null, // 1..31
-    monthlyFallback: serieInput.monthlyFallback || "EOM",                  // EOM | shift_al_basso
+    monthlyFallback: "EOM",                  // EOM | shift_al_basso
 
     anchorMonth: serieInput.anchorMonth ? Number(serieInput.anchorMonth) : null, // (annuale) 1..12
 
     timezone: "Europe/Rome",
     status: (serieInput.status || "active"),
-    lookaheadDays: Number(serieInput.lookaheadDays ?? 45),
+    lookaheadDays: 45,
 
     skipDates: Array.isArray(serieInput.skipDates) ? serieInput.skipDates : [],
     lastMaterializedDate: null,

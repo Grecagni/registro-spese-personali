@@ -125,13 +125,6 @@
             <label class="form-label" for="recDay">Giorno (1–31)</label>
             <input id="recDay" type="number" min="1" max="31" class="form-control">
           </div>
-          <div class="col-6 col-md-4 rec-monthly rec-monthly-day">
-            <label class="form-label" for="recFallback">Mesi corti</label>
-            <select id="recFallback" class="form-select">
-              <option value="EOM" selected>Vai a fine mese (consigliato)</option>
-              <option value="shift_al_basso">Scala al giorno max</option>
-            </select>
-          </div>
 
           <!-- Yearly -->
           <div class="col-6 rec-yearly d-none">
@@ -143,10 +136,6 @@
             <input id="recAMonth" type="number" min="1" max="12" class="form-control">
           </div>
 
-          <div class="col-12 col-sm-6">
-            <label class="form-label" for="recLookahead">Genera in anticipo (giorni)</label>
-            <input id="recLookahead" type="number" min="0" value="45" class="form-control">
-          </div>
           <div class="col-12 col-sm-6">
             <label class="form-label" for="recStatus">Stato</label>
             <select id="recStatus" class="form-select">
@@ -236,14 +225,12 @@
             endDate: document.getElementById("recEnd").value || null,
             frequenza: document.getElementById("recFreq").value,
             interval: document.getElementById("recInterval").value || 1,
-            lookaheadDays: document.getElementById("recLookahead").value || 45,
             status: document.getElementById("recStatus").value,
 
             // specifici
             weekday: document.getElementById("recWeekday").value,
             monthlyMode: document.getElementById("recMonthlyMode").value,
             anchorDay: document.getElementById("recDay").value,
-            monthlyFallback: document.getElementById("recFallback").value,
             anchorMonth: document.getElementById("recAMonth").value,
           };
 
