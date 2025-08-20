@@ -12,29 +12,32 @@
   <link rel="stylesheet" href="css/style.css">
 
 </head>
-<body class="container">
-  <main class="container py-5">
+<body class="container ">
+  <main class="container">
     <div class="container text-center">
       <img class="mb-4" src="/IMG/icon.png" alt="" width="72" height="57">
     </div>
-    <div class="card shadow-sm">
-      <div class="card-header text-center">
-      Accedi
-      </div>
-      <div class="card-body p-4 p-md-5">
-        <form id="loginForm" class="login-form mx-auto" novalidate>
-          <div class="mb-3">
-            <label class="form-label" for="email">E-mail</label>
-            <input id="email" type="email" class="form-control" required autocomplete="username">
-          </div>
-          <div class="mb-3">
-            <label class="form-label" for="password">Password</label>
-            <input id="password" type="password" class="form-control" required autocomplete="current-password">
-          </div>
-          <button class="btn btn-primary w-100" type="submit">Entra</button>
-        </form>
+    <div class="container">
+      <div class="card mx-auto p-2 shadow-sm">
+        <div class="card-header text-center">
+        Accedi
+        </div>
+        <div class="card-body">
+          <form id="loginForm" class="login-form mx-auto" novalidate>
+            <div class="mb-3">
+              <label class="form-label" for="email">E-mail</label>
+              <input id="email" type="email" class="form-control" required autocomplete="username">
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="password">Password</label>
+              <input id="password" type="password" class="form-control" required autocomplete="current-password">
+            </div>
+            <button class="btn btn-primary w-100" type="submit">Entra</button>
+          </form>
+        </div>
       </div>
     </div>
+    <div id="msg" class="mb-3" role="status" aria-live="polite"></div>
   </main>
 
   <!-- JS di pagina -->
