@@ -2,7 +2,7 @@
 import { auth } from "./db.js";
 import {
   onAuthStateChanged,
-  signInWithEmailAndPassword,
+  signInWithEmailAndPassword, createUserWithEmailAndPassword,
   signOut,
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
@@ -18,7 +18,7 @@ const redirect = (url) => location.replace(url);
 // Se sei già loggato, non ha senso stare su login
 export function bounceIfLogged() {
   onAuthStateChanged(auth, (user) => {
-    if (user && currentFile() === "login.html") {
+    if (user && (currentFile() === "login.html" || currentFile() === "signup.html")) {
       const back = new URL(location.href).searchParams.get("from");
       redirect(back || "index.html");
     }
@@ -44,7 +44,9 @@ export function emailLogin(email, password) {
   return signInWithEmailAndPassword(auth, email, password);
 }
 
-// Logout
+export function emailSignup(email, password) {
+  return createUserWithEmailAndPassword(auth, email, password);
+}
 export async function logout() {
   await signOut(auth);
   redirect("login.html");

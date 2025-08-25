@@ -3,15 +3,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/fireba
 import { getAuth }        from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import { getFirestore }   from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-// Config (quella già usata nel tuo progetto)
-const firebaseConfig = {
-  apiKey: "AIzaSyB76HrqxMp0EuPsedVMBJaz6MW5qHdFr10",
-  authDomain: "gestione-spese-personale.firebaseapp.com",
-  projectId: "gestione-spese-personale",
-  storageBucket: "gestione-spese-personale.firebasestorage.app",
-  messagingSenderId: "659511690509",
-  appId: "1:659511690509:web:c1eb2a8c1b0b10ce469c44"
-};
+import { firebaseConfig } from "./config.js";
 
 export const app  = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
