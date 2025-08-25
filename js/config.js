@@ -1,8 +1,8 @@
 export const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyB76HrqxMp0EuPsedVMBJaz6MW5qHdFr10",
+  authDomain: "gestione-spese-personale.firebaseapp.com",
+  projectId: "gestione-spese-personale",
+  storageBucket: "gestione-spese-personale.firebasestorage.app",
+  messagingSenderId: "659511690509",
+  appId: "1:659511690509:web:c1eb2a8c1b0b10ce469c44"
 };
