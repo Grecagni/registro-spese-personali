@@ -23,6 +23,10 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('fetch', event => {
+  const requestOrigin = new URL(event.request.url).origin;
+  if (requestOrigin !== self.location.origin) {
+    return;
+  }
   event.respondWith(
     caches.match(event.request).then(resp => resp || fetch(event.request))
   );
