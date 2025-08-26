@@ -54,3 +54,23 @@ export async function logout() {
 
 // User corrente
 export const currentUser = () => auth.currentUser;
+
+// Attende che l'utente sia disponibile (max ~8s)
+export function waitUser() {
+  return new Promise((resolve, reject) => {
+    const t0 = performance.now();
+    const id = setInterval(() => {
+      const u = auth.currentUser;
+      if (u) { clearInterval(id); resolve(u); }
+      if (performance.now() - t0 > 8000) {
+        clearInterval(id);
+        reject(new Error("Login timeout"));
+      }
+    }, 100);
+  });
+}
+
+// Ritorna l'UID dell'utente corrente (attendendo se necessario)
+export async function currentUid() {
+  return (auth.currentUser || await waitUser()).uid;
+}
