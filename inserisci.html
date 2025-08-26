@@ -61,75 +61,85 @@
 
       <!-- PANNELLO RICORRENZA -->
       <div id="recPanel" class="border rounded p-3" style="display:none;">
+        <div class="form-text mb-3">Imposta qui la ricorrenza della spesa indicando ogni quanto si ripete e per quanto tempo.</div>
         <div class="row g-3">
           <div class="col-12 col-sm-6">
             <label class="form-label" for="recFreq">Frequenza</label>
-            <select id="recFreq" class="form-select">
+            <select id="recFreq" class="form-select" title="Periodo base della ripetizione">
               <option value="monthly" selected>Mensile</option>
               <option value="weekly">Settimanale</option>
               <option value="yearly">Annuale</option>
             </select>
+            <div class="form-text">Es. mensile = ogni mese</div>
           </div>
           <div class="col-12 col-sm-6">
             <label class="form-label" for="recInterval">Intervallo</label>
-            <input id="recInterval" type="number" min="1" value="1" class="form-control">
-            <div class="form-text">Es. ogni <b>1</b> mese / ogni <b>2</b> settimane</div>
+            <input id="recInterval" type="number" min="1" value="1" class="form-control" title="Intervallo fra le ripetizioni">
+            <div class="form-text">Intervallo: 1 = ogni periodo, 2 = ogni due periodi</div>
           </div>
 
           <div class="col-12 col-sm-6">
             <label class="form-label" for="recStart">Data inizio</label>
-            <input id="recStart" type="date" class="form-control">
+            <input id="recStart" type="date" class="form-control" title="Data da cui parte la serie">
+            <div class="form-text">Data da cui parte la serie</div>
           </div>
           <div class="col-12 col-sm-6">
             <label class="form-label" for="recEnd">Data fine (opz.)</label>
-            <input id="recEnd" type="date" class="form-control">
+            <input id="recEnd" type="date" class="form-control" title="Lascia vuoto per continuare senza fine">
+            <div class="form-text">Lascia vuoto per continuare senza fine</div>
           </div>
 
           <!-- Weekly -->
           <div class="col-12 col-sm-6 rec-weekly d-none">
             <label class="form-label" for="recWeekday">Giorno della settimana</label>
-            <select id="recWeekday" class="form-select">
+            <select id="recWeekday" class="form-select" title="Scegli il giorno della settimana">
               <option value="1">Lunedì</option><option value="2">Martedì</option>
               <option value="3">Mercoledì</option><option value="4">Giovedì</option>
               <option value="5">Venerdì</option><option value="6">Sabato</option>
               <option value="7">Domenica</option>
             </select>
+            <div class="form-text">Es. lunedì = 1, domenica = 7</div>
           </div>
 
           <!-- Monthly -->
           <div class="col-12 col-md-4 rec-monthly">
             <label class="form-label" for="recMonthlyMode">Mensile: modalità</label>
-            <select id="recMonthlyMode" class="form-select">
+            <select id="recMonthlyMode" class="form-select" title="Modo di calcolo della data">
               <option value="giorno_fisso" selected>Giorno fisso</option>
               <option value="ultimo_giorno">Ultimo giorno</option>
             </select>
+            <div class="form-text">Giorno fisso = usa il giorno indicato; Ultimo giorno = sempre l'ultimo del mese</div>
           </div>
           <div class="col-6 col-md-4 rec-monthly rec-monthly-day">
             <label class="form-label" for="recDay">Giorno (1–31)</label>
-            <input id="recDay" type="number" min="1" max="31" class="form-control">
+            <input id="recDay" type="number" min="1" max="31" class="form-control" title="Giorno del mese">
+            <div class="form-text">Es. 15 = ogni 15 del mese</div>
           </div>
 
           <!-- Yearly -->
           <div class="col-6 rec-yearly d-none">
             <label class="form-label" for="recADay">Giorno</label>
-            <input id="recADay" type="number" min="1" max="31" class="form-control">
+            <input id="recADay" type="number" min="1" max="31" class="form-control" title="Giorno del mese">
+            <div class="form-text">Giorno dell'anno (1-31)</div>
           </div>
           <div class="col-6 rec-yearly d-none">
             <label class="form-label" for="recAMonth">Mese</label>
-            <input id="recAMonth" type="number" min="1" max="12" class="form-control">
+            <input id="recAMonth" type="number" min="1" max="12" class="form-control" title="Mese dell'anno">
+            <div class="form-text">Mese dell'anno (1-12)</div>
           </div>
 
           <div class="col-12 col-sm-6">
             <label class="form-label" for="recStatus">Stato</label>
-            <select id="recStatus" class="form-select">
+            <select id="recStatus" class="form-select" title="Stato della serie">
               <option value="active" selected>Attiva</option>
               <option value="paused">In pausa</option>
             </select>
+            <div class="form-text">Attiva = genera spese, In pausa = non genera</div>
           </div>
 
           <div class="col-12">
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="recGenerateNow" checked>
+              <input class="form-check-input" type="checkbox" id="recGenerateNow" checked title="Crea subito le prossime occorrenze">
               <label class="form-check-label" for="recGenerateNow">Genera subito le prossime istanze</label>
             </div>
           </div>
